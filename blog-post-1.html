@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How Data Drives Better Product Decisions — Saimoon Ahmed Adnan</title>
+<meta name="description" content="Great products are built on evidence, not assumptions. A deep dive into how product analytics supports better decisions." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  .post-body {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 100px;
+  }
+  .post-body h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 48px 0 14px;
+    color: var(--text);
+  }
+  .post-body h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 32px 0 10px;
+    color: var(--text);
+  }
+  .post-body p {
+    font-size: 16px;
+    color: var(--text-soft);
+    line-height: 1.8;
+    margin-bottom: 18px;
+  }
+  .post-body ul {
+    list-style: disc;
+    padding-left: 22px;
+    margin-bottom: 18px;
+  }
+  .post-body ul li {
+    font-size: 16px;
+    color: var(--text-soft);
+    line-height: 1.75;
+    margin-bottom: 6px;
+  }
+  .post-body strong { color: var(--text); font-weight: 600; }
+  .post-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 40px 0;
+  }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-soft);
+    margin-bottom: 40px;
+    transition: color 0.15s ease, gap 0.15s ease;
+  }
+  .back-link:hover { color: var(--text); gap: 10px; }
+  .back-link svg { width: 15px; height: 15px; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="nav-wrap">
+  <nav class="nav" aria-label="Primary">
+    <a href="blog.html" class="nav__brand">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5C4 4.67 4.67 4 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke="currentColor" stroke-width="1.6"/><path d="M20 5.5c0-.83-.67-1.5-1.5-1.5H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Blogs</span>
+    </a>
+    <ul class="nav__links" role="list">
+      <li><a href="index.html" class="nav__link">Home</a></li>
+      <li><a href="about.html" class="nav__link">About</a></li>
+      <li><a href="skills.html" class="nav__link">Skills</a></li>
+      <li><a href="projects.html" class="nav__link">Projects</a></li>
+      <li><a href="certificates.html" class="nav__link">Certificates</a></li>
+      <li><a href="contact.html" class="nav__link">Contact</a></li>
+    </ul>
+    <div class="nav__actions">
+      <button class="nav__icon-btn" aria-label="Search" type="button">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+      <button class="nav__icon-btn" aria-label="Toggle dark mode" type="button" data-theme-toggle>
+        <svg viewBox="0 0 24 24" fill="none" data-theme-icon></svg>
+      </button>
+      <a class="nav__icon-btn" href="https://github.com/saimoon-adnan" aria-label="GitHub" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.49 2.87 8.3 6.84 9.64.5.1.68-.22.68-.49 0-.24-.01-1.05-.01-1.9-2.78.62-3.37-1.21-3.37-1.21-.45-1.18-1.1-1.49-1.1-1.49-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.34-1.11.62-1.36-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.31.1-2.73 0 0 .84-.27 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.42.2 2.47.1 2.73.64.72 1.03 1.64 1.03 2.76 0 3.94-2.34 4.81-4.57 5.06.36.32.67.94.67 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.03 10.03 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z" fill="currentColor"/></svg>
+      </a>
+      <button class="nav__icon-btn nav__links-mobile" aria-label="Open menu" type="button" data-menu-open>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<div class="mobile-menu" data-mobile-menu>
+  <div class="mobile-menu__top">
+    <button class="nav__icon-btn" aria-label="Close menu" type="button" data-menu-close>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <nav class="mobile-menu__links" aria-label="Mobile">
+    <a href="blog.html">Blog</a>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="skills.html">Skills</a>
+    <a href="projects.html">Projects</a>
+    <a href="certificates.html">Certificates</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</div>
+
+<main id="main">
+  <div class="post-body">
+
+    <a href="blog.html" class="back-link reveal">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Writing
+    </a>
+
+    <!-- Article header -->
+    <header style="margin-bottom:40px;">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px;">
+        <span class="pill pill--dark" style="font-size:12px;">Product Analytics</span>
+        <span class="pill pill--status" style="font-size:12px;">Featured</span>
+        <span style="display:flex; align-items:center; gap:5px; font-size:12.5px; color:var(--text-faint);">
+          <svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px;"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          8 min read
+        </span>
+      </div>
+
+      <h1 style="font-size:clamp(28px,5vw,40px); font-weight:800; line-height:1.18; letter-spacing:-0.02em; margin-bottom:16px;">
+        How Data Drives Better Product Decisions
+      </h1>
+
+      <p style="font-size:15.5px; color:var(--text-soft); line-height:1.7; margin-bottom:22px;">
+        Great products are rarely built on assumptions. They are built on evidence, curiosity, and a willingness to understand users through data.
+      </p>
+
+      <div style="display:flex; align-items:center; gap:14px; padding:18px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+        <!-- <div style="width:38px; height:38px; border-radius:10px; overflow:hidden; background:var(--bg-soft-2); flex-shrink:0;">
+          <img src="my pic/saimon 1.jpg" alt="Saimoon Ahmed Adnan" style="width:100%; height:100%; object-fit:cover; object-position:center 10%;">
+        </div> -->
+        <div>
+          <p style="font-size:13.5px; font-weight:600; margin-bottom:1px;">Saimoon Ahmed Adnan</p>
+          <p style="font-size:12.5px; color:var(--text-faint);">June 28, 2026</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Article body -->
+    <div class="post-body-content">
+
+      <p>Imagine two companies launching the exact same feature on the same day. Both teams have talented developers. Both have strong designers. Both are backed by solid budgets. Yet a few weeks later, one feature becomes part of the product people actually use and keep returning to, while the other quietly disappears into the interface.</p>
+      <p>The difference is rarely luck. More often, it comes down to whether the team made decisions with evidence or with assumptions.</p>
+      <p>That idea is what pulled me deeper into product analytics. As someone preparing for a career in Product Data Analytics, I used to think the job was mostly about SQL queries, dashboards, and reporting numbers. But the more I studied product case studies, built small analytics projects, and tried to understand how real companies make decisions, the more I realized something important: <strong>data is not just for measurement. Data is for judgment.</strong></p>
+      <p>Good product decisions are not built on instinct alone. They are built on curiosity, user understanding, and the discipline to ask better questions before taking action.</p>
+
+      <div class="post-divider"></div>
+
+      <h2>Why Data Matters in Product Decisions</h2>
+      <p>Product teams are constantly making trade-offs. Should they simplify onboarding or add more features? Should they improve retention or focus on acquisition? Should they redesign a page or test a smaller change first?</p>
+      <p>Without data, these questions are answered through opinions, hierarchy, or the loudest voice in the room. With data, they can be tested, compared, and validated. That does not mean data replaces product intuition. It means intuition becomes stronger when it is tested against reality.</p>
+      <p>Companies like <strong>Netflix, Spotify, Amazon, Uber, and Airbnb</strong> are often cited as data-driven for a reason. They do not launch features simply because they sound innovative. They look at user behavior, experiment with changes, and measure whether those changes improve the product experience.</p>
+      <p>Netflix does not only care about whether people open the app. It cares about whether users actually find something worth watching, continue watching, and come back later. Spotify does not just care about app installs — it cares about whether listeners keep listening, save songs, and build habits around the platform. Amazon is famous for optimizing every stage of the customer journey. A small change in product design can affect conversion at scale.</p>
+      <p><strong>The real lesson: successful companies do not use data only to report what happened. They use data to decide what should happen next.</strong></p>
+
+      <div class="post-divider"></div>
+
+      <h2>Product Thinking vs Traditional Analytics</h2>
+      <p>One of the biggest mindset shifts in analytics is understanding the difference between reporting numbers and using data to improve a product.</p>
+      <p>Traditional analytics often asks: <em>"What happened last week?"</em><br>Product analytics asks: <em>"Why did it happen, and what should we do about it?"</em></p>
+      <p>If users are leaving, a traditional report may show a drop in traffic or conversions. A product analyst goes further and asks: Which users are leaving? At what point are they dropping off? Did this happen after a design change, a pricing update, or a new campaign?</p>
+      <p>A dashboard may show a decline. Product thinking asks whether the decline is a symptom, a cause, or just noise. A graph may show higher engagement. Product thinking asks whether that engagement leads to retention, revenue, or long-term value. <strong>The best analysts do not just describe behavior. They connect behavior to decisions.</strong></p>
+
+      <h3>The question framework that matters</h3>
+      <p>When I study product analytics examples, I keep coming back to a handful of questions:</p>
+      <ul>
+        <li>Why are users leaving?</li>
+        <li>Which feature creates value?</li>
+        <li>Where do users get stuck?</li>
+        <li>What should we build next?</li>
+        <li>What changed before the metric moved?</li>
+        <li>Is this a product issue, a marketing issue, or a measurement issue?</li>
+      </ul>
+      <p>These questions matter more than any one tool. A good analyst can use SQL, Python, or a BI dashboard — but the real value comes from knowing what question to ask in the first place.</p>
+
+      <div class="post-divider"></div>
+
+      <h2>Product Metrics That Matter</h2>
+      <p>Metrics are not just numbers — they are signals about whether the product is healthy, useful, and moving in the right direction.</p>
+
+      <h3>North Star Metric</h3>
+      <p>The North Star Metric is the one measure that best represents the core value a product delivers. For a streaming platform, it might reflect meaningful consumption. For a marketplace, completed transactions. For a collaboration tool, active teams getting work done. When a company knows its North Star, it becomes easier to decide which experiments matter and which ones are distractions.</p>
+
+      <h3>DAU and MAU</h3>
+      <p>DAU and MAU show frequency and habit. A product with strong daily and monthly engagement is usually becoming part of users' routines. But high usage alone does not mean success — a product can have strong activity and still fail to retain valuable users.</p>
+
+      <h3>Retention Rate</h3>
+      <p>Retention tells you whether users found enough value to return. A product can look impressive in acquisition, but if users disappear after the first interaction, the product is leaking value. Retention separates short-term attention from real product fit.</p>
+
+      <h3>Churn Rate</h3>
+      <p>Churn is the reverse side of retention. Losing users is expensive. Acquiring new users usually costs more than keeping existing ones. If churn rises, it often signals a deeper issue in the user experience, pricing, support, or product value.</p>
+
+      <h3>Conversion & Activation Rate</h3>
+      <p>Conversion rate measures how effectively users move from one important step to another — visitor to signup, signup to activation, trial to paid. A low conversion rate points to a moment where users are hesitating or disengaged. Activation shows whether users reached the moment where the product began to feel useful.</p>
+
+      <h3>Customer Lifetime Value</h3>
+      <p>CLV connects product behavior to long-term business value. A customer who stays for one month is very different from a customer who returns for a year. Businesses use CLV to evaluate whether acquisition costs are worth it and which segments deserve attention.</p>
+
+      <div class="post-divider"></div>
+
+      <h2>A Practical Case Study</h2>
+      <p>Let's imagine a food delivery app noticing that total orders have dropped over the last three weeks. A Product Data Analyst would not jump to a conclusion — the job would be to investigate the decline systematically.</p>
+
+      <h3>Step 1: Define the problem clearly</h3>
+      <p>Before opening any dashboard: what exactly is decreasing? Total orders, completed orders, new user orders, or repeat orders? A broad phrase like "orders are decreasing" can hide very different problems.</p>
+
+      <h3>Step 2: Identify the KPIs</h3>
+      <p>For a food delivery app, I would start with: total orders, conversion rate from app open to order placed, cart abandonment rate, average delivery time, late delivery rate, cancellation rate, repeat purchase rate, and active users by segment.</p>
+
+      <h3>Step 3: Break the problem into hypotheses</h3>
+      <p>Maybe users are not opening the app as often. Maybe more users are dropping off at the menu or cart stage. Maybe delivery times have increased. Maybe a recent app update introduced friction. Maybe a competitor launched a strong offer. The goal is not to prove one theory immediately — it is to narrow the possibilities.</p>
+
+      <h3>Step 4: Use SQL to explore the data</h3>
+      <p>SQL helps slice the problem into meaningful pieces: orders by date to confirm the decline trend, orders by city or zone to check if the issue is localized, orders by device type, conversion by user segment, order status data. A few targeted queries can reveal whether the issue is behavioral, operational, or technical.</p>
+
+      <h3>Step 5: Open the right dashboards</h3>
+      <p>Useful dashboards for this case might include a revenue and order trend dashboard, a funnel dashboard for the order flow, a delivery performance dashboard, and a retention dashboard for repeat buyers. Dashboards are not the end of the analysis — they are the map. The real work is interpreting what the map means.</p>
+
+      <h3>Step 6: Build recommendations</h3>
+      <p>If order decline is concentrated in users who reached checkout but abandoned after seeing a higher delivery fee — that suggests a pricing or communication issue. If decline is strongest in one city where delivery delays increased sharply — that is an operational issue. If the decline started right after a mobile app update and is strongest on Android — that suggests a possible technical regression. <strong>The recommendation depends on the evidence.</strong></p>
+
+      <div class="post-divider"></div>
+
+      <h2>The Role of Data Tools</h2>
+      <p>Tools matter, but only because they help support better thinking.</p>
+      <ul>
+        <li><strong>SQL</strong> — the foundation of product analysis. Allows you to retrieve and shape data from the source, turning vague ideas into measurable patterns.</li>
+        <li><strong>Python</strong> — useful when analysis gets deeper: cleaning data, automating tasks, building statistical models, and creating more flexible analysis than a dashboard alone can offer.</li>
+        <li><strong>Excel</strong> — one of the most practical tools for quick analysis, modeling, and communication. A bridge between raw data and business discussion.</li>
+        <li><strong>Power BI</strong> — useful for building dashboards that help decision-makers quickly see what changed and where to dig deeper.</li>
+        <li><strong>GA4</strong> — especially useful for understanding web and acquisition behavior: traffic sources, landing page performance, and user journeys.</li>
+        <li><strong>Mixpanel / Amplitude</strong> — valuable for event-based product analysis, behavioral analysis, segmentation, and retention studies.</li>
+      </ul>
+      <p>The important point: <strong>the tool does not matter more than the question.</strong> The best analysts choose the tool based on the decision they are trying to support.</p>
+
+      <div class="post-divider"></div>
+
+      <h2>Common Mistakes Companies Make</h2>
+      <ul>
+        <li><strong>Tracking too many metrics</strong> — when a company tracks everything, it often understands nothing. Data should simplify decision-making, not complicate it.</li>
+        <li><strong>Ignoring user behavior</strong> — looking only at business outcomes like revenue or conversion and ignoring the actual behavior behind those numbers. Behavior explains the metric.</li>
+        <li><strong>Measuring vanity metrics</strong> — high page views or app installs may feel good, but they are not always connected to business outcomes.</li>
+        <li><strong>Building features without evidence</strong> — a team can spend weeks building something that sounds useful, only to discover that users do not care.</li>
+        <li><strong>Making assumptions instead of testing</strong> — A/B testing, cohort analysis, funnel analysis, and user segmentation exist to challenge assumptions before they become expensive mistakes.</li>
+      </ul>
+
+      <div class="post-divider"></div>
+
+      <h2>Conclusion</h2>
+      <p>The more I study product analytics, the more I realize that the best product decisions are rarely accidental. They come from teams that pay attention to behavior, test their assumptions, and stay curious about what users are actually doing.</p>
+      <p>Data matters because it gives product teams a way to move from opinion to evidence. It helps them understand not only what happened, but why it happened and what should happen next.</p>
+      <p><strong>Great products are not built on guesses. They are built on evidence, curiosity, and the discipline to learn from users before making the next decision. Better data does not just improve reporting — it improves judgment.</strong></p>
+
+      <div class="post-divider"></div>
+
+      <a href="blog.html" class="back-link" style="display:inline-flex;">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to Writing
+      </a>
+
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer__top">
+    <div>
+      <p class="footer__brand-name">Saimoon.</p>
+      <p class="footer__brand-text">Computer Science student focused on product analytics, data science, machine learning, and software engineering.</p>
+      <div class="footer__socials">
+        <a href="https://github.com/saimoon-adnan" class="footer__social-btn" aria-label="GitHub" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.49 2.87 8.3 6.84 9.64.5.1.68-.22.68-.49 0-.24-.01-1.05-.01-1.9-2.78.62-3.37-1.21-3.37-1.21-.45-1.18-1.1-1.49-1.1-1.49-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.34-1.11.62-1.36-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.31.1-2.73 0 0 .84-.27 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.42.2 2.47.1 2.73.64.72 1.03 1.64 1.03 2.76 0 3.94-2.34 4.81-4.57 5.06.36.32.67.94.67 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.03 10.03 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/saimoon-adnan-771079322/" class="footer__social-btn" aria-label="LinkedIn" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6.94 8.5a1.94 1.94 0 1 0 0-3.88 1.94 1.94 0 0 0 0 3.88ZM5.5 10.4h2.9V19H5.5v-8.6Zm5.2 0h2.78v1.18h.04c.39-.73 1.34-1.5 2.76-1.5 2.95 0 3.5 1.94 3.5 4.46V19h-2.9v-3.86c0-.92-.02-2.11-1.29-2.11-1.3 0-1.5 1-1.5 2.05V19h-2.9v-8.6Z" fill="currentColor"/></svg>
+        </a>
+        <a href="mailto:adnansaimoon@gmail.com" class="footer__social-btn" aria-label="Email">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 6.5A1.5 1.5 0 0 1 5.5 5h13A1.5 1.5 0 0 1 20 6.5v11A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5v-11Z" stroke="currentColor" stroke-width="1.5"/><path d="M5 7l7 5.5L19 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+    <nav>
+      <p class="footer__col-title">Pages</p>
+      <a href="about.html">About</a>
+      <a href="skills.html">Skills</a>
+      <a href="projects.html">Projects</a>
+      <a href="certificates.html">Certificates</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div>
+      <p class="footer__col-title">Contact</p>
+      <a href="mailto:adnansaimoon@gmail.com" class="footer__contact-item">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 6.5A1.5 1.5 0 0 1 5.5 5h13A1.5 1.5 0 0 1 20 6.5v11A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5v-11Z" stroke="currentColor" stroke-width="1.5"/><path d="M5 7l7 5.5L19 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        adnansaimoon@gmail.com
+      </a>
+      <a href="https://www.facebook.com/adnan.irfan.1213" class="footer__contact-item" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M14 9h2.5l-.4 3H14v8h-3v-8H9V9h2V7.2C11 4.9 12 3 15 3h2v3h-1.5c-.9 0-1.5.3-1.5 1.3V9Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" fill="none"/></svg>
+        Facebook
+      </a>
+      <a href="https://x.com/OnlySaimon" class="footer__contact-item" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4 4 20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        X
+      </a>
+      <a href="https://wa.me/8801600627822" class="footer__contact-item" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a1 1 0 0 1-1.1 1A18 18 0 0 1 3 4.1 1 1 0 0 1 4 3h4l1.5 4-2 1.3a13 13 0 0 0 6.2 6.2L15 12.5 19 14v1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span>© 2026 Saimoon Ahmed Adnan. All rights reserved.</span>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
