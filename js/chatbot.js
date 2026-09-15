@@ -4,13 +4,205 @@
    ===================================================================== */
 (function () {
 
+  /* =====================================================================
+     LIVE DATA — auto-updates from the real pages, no JS edits needed.
+     On load, fetches certificates.html, projects.html, skills.html,
+     about.html and blog.html, and scrapes their content. Edit those
+     HTML files (add a cert, change your bio, swap the CV link, write a
+     new blog post) and the chatbot picks it up automatically — chatbot.js
+     itself never needs to change again.
+     If a fetch fails (e.g. opened as a local file:// instead of via a
+     real host/server), that topic silently falls back to the static
+     text below so the chatbot still works.
+     ===================================================================== */
+  var LIVE = { certs: null, projects: null, skills: null, about: null, contact: null, extracurricular: null, blog: null, cv: null };
+
+  function fetchDoc(url) {
+    return fetch(url).then(function (r) {
+      if (!r.ok) throw new Error('fetch failed: ' + url);
+      return r.text();
+    }).then(function (html) {
+      return new DOMParser().parseFromString(html, 'text/html');
+    });
+  }
+
+  function clean(s) { return s.replace(/\s+/g, ' ').trim(); }
+
+  function buildCerts(doc) {
+    var cards = doc.querySelectorAll('.cert-card');
+    if (!cards.length) return null;
+    var lines = [];
+    cards.forEach(function (c) {
+      var title = c.querySelector('h3');
+      var issuer = c.querySelector('.pill');
+      if (title) lines.push('• ' + clean(title.textContent) + (issuer ? ' (' + clean(issuer.textContent) + ')' : ''));
+    });
+    return "Saimoon has " + cards.length + " certificates 🏆\n\n" + lines.join('\n');
+  }
+
+  function buildProjects(doc) {
+    var cards = doc.querySelectorAll('.proj-card');
+    if (!cards.length) return null;
+    var blocks = [];
+    cards.forEach(function (c, i) {
+      var title = c.querySelector('h3');
+      var desc = c.querySelector('p');
+      if (!title) return;
+      var t = (i + 1) + '️⃣ ' + clean(title.textContent);
+      if (desc) t += ' — ' + clean(desc.textContent);
+      blocks.push(t);
+    });
+    return "Saimoon has " + cards.length + " data analytics projects:\n\n" + blocks.join('\n\n') + "\n\nClick Projects in the nav to see them all!";
+  }
+
+  function buildSkills(doc) {
+    var groups = doc.querySelectorAll('.card h3');
+    if (!groups.length) return null;
+    var blocks = [];
+    groups.forEach(function (h3) {
+      var group = h3.closest('.card');
+      if (!group) return;
+      var pills = group.querySelectorAll('.pill');
+      if (!pills.length) return;
+      var names = [];
+      pills.forEach(function (p) { names.push(clean(p.textContent)); });
+      blocks.push('🔹 ' + clean(h3.textContent) + ': ' + names.join(', '));
+    });
+    return "Saimoon works with:\n\n" + blocks.join('\n');
+  }
+
+  // shared by about/education/location/available/cv — all read from about.html
+  function scrapeAboutInfo(doc) {
+    var bioParas = doc.querySelectorAll('main p.body-text');
+    var bio = Array.prototype.map.call(bioParas, function (p) { return clean(p.textContent); }).join(' ');
+    var info = {};
+    doc.querySelectorAll('.text-faint').forEach(function (label) {
+      var val = label.nextElementSibling;
+      if (val) info[clean(label.textContent)] = clean(val.textContent);
+    });
+    var cvLink = null;
+    doc.querySelectorAll('a.btn').forEach(function (a) {
+      if (/download cv/i.test(a.textContent)) cvLink = a.getAttribute('href');
+    });
+    return { bio: bio, info: info, cvLink: cvLink };
+  }
+
+  function buildAbout(parsed) {
+    if (!parsed.bio) return null;
+    var lines = [];
+    ['Focus', 'Education', 'Location'].forEach(function (k) {
+      if (parsed.info[k]) lines.push(k + ': ' + parsed.info[k]);
+    });
+    return "About Saimoon 👋\n\n" + parsed.bio + (lines.length ? '\n\n' + lines.join('\n') : '');
+  }
+
+  function buildEducation(parsed) {
+    if (!parsed.info['Education']) return null;
+    var txt = "Saimoon is pursuing " + parsed.info['Education'] + " 🎓";
+    if (parsed.info['Location']) txt += "\n\nBased in " + parsed.info['Location'] + ".";
+    return txt;
+  }
+
+  function buildAvailability(parsed) {
+    if (!parsed.info['Availability']) return null;
+    var txt = parsed.info['Availability'] + " 🟢";
+    if (parsed.info['Focus']) txt += "\n\nFocus: " + parsed.info['Focus'];
+    return txt;
+  }
+
+  function buildLocation(parsed) {
+    if (!parsed.info['Location']) return null;
+    return "Saimoon is based in " + parsed.info['Location'] + " 🇧🇩\n\nAvailable for remote work globally too!";
+  }
+
+  function buildCV(parsed) {
+    if (!parsed.cvLink) return null;
+    return "Here's Saimoon's CV 📄\n\n" + parsed.cvLink;
+  }
+
+  function buildExtracurricular(doc) {
+    var panels = doc.querySelectorAll('[data-sim-panel]');
+    if (!panels.length) return null;
+    var blocks = [];
+    panels.forEach(function (panel) {
+      var h3 = panel.querySelector('h3');
+      var meta = panel.querySelector('p');
+      if (!h3) return;
+      var text = '💼 ' + clean(h3.textContent);
+      if (meta) text += '\n' + clean(meta.textContent);
+      panel.querySelectorAll('li').forEach(function (li) { text += '\n• ' + clean(li.textContent).replace(/^—\s*/, ''); });
+      blocks.push(text);
+    });
+    return "Saimoon completed " + panels.length + " job simulations:\n\n" + blocks.join('\n\n');
+  }
+
+  // contact links live in the footer, present on every page
+  function buildContact(doc) {
+    var links = {};
+    doc.querySelectorAll('.footer__contact-item, .footer__social-btn').forEach(function (a) {
+      var href = a.getAttribute('href') || '';
+      if (href.indexOf('mailto:') === 0) links.email = href.replace('mailto:', '');
+      else if (href.indexOf('wa.me') !== -1) links.whatsapp = href;
+      else if (href.indexOf('github.com') !== -1) links.github = href;
+      else if (href.indexOf('linkedin.com') !== -1) links.linkedin = href;
+      else if (href.indexOf('facebook.com') !== -1) links.facebook = href;
+      else if (href.indexOf('x.com') !== -1 || href.indexOf('twitter.com') !== -1) links.x = href;
+    });
+    if (!links.email) return null;
+    var out = "You can reach Saimoon here 📬\n\n📧 Email: " + links.email;
+    if (links.whatsapp) out += "\n💬 WhatsApp: " + links.whatsapp;
+    if (links.linkedin) out += "\n💼 LinkedIn: " + links.linkedin;
+    if (links.github) out += "\n🐙 GitHub: " + links.github;
+    LIVE.socials = "Saimoon's social links 🔗\n\n"
+      + (links.github ? "🐙 GitHub: " + links.github + "\n" : "")
+      + (links.linkedin ? "💼 LinkedIn: " + links.linkedin + "\n" : "")
+      + (links.facebook ? "📘 Facebook: " + links.facebook + "\n" : "")
+      + (links.x ? "🐦 X: " + links.x + "\n" : "")
+      + (links.email ? "📧 Email: " + links.email : "");
+    return out;
+  }
+
+  function buildBlog(doc) {
+    var post = doc.querySelector('main article.card h2');
+    if (!post) return null;
+    var article = post.closest('article');
+    var excerpt = article.querySelector('p');
+    var tags = [];
+    article.querySelectorAll('.pill').forEach(function (p) { if (!/featured/i.test(p.textContent)) tags.push(clean(p.textContent)); });
+    var out = "Saimoon wrote a blog article 📝\n\n\"" + clean(post.textContent) + "\"";
+    if (excerpt) out += "\n\n" + clean(excerpt.textContent);
+    if (tags.length) out += "\n\nTopics: " + tags.join(', ');
+    return out;
+  }
+
+  var LIVE_READY = Promise.all([
+    fetchDoc('certificates.html').then(function (doc) {
+      LIVE.certs = buildCerts(doc);
+      LIVE.contact = buildContact(doc);
+    }).catch(function () {}),
+    fetchDoc('projects.html').then(function (doc) { LIVE.projects = buildProjects(doc); }).catch(function () {}),
+    fetchDoc('skills.html').then(function (doc) { LIVE.skills = buildSkills(doc); }).catch(function () {}),
+    fetchDoc('about.html').then(function (doc) {
+      var parsed = scrapeAboutInfo(doc);
+      LIVE.about = buildAbout(parsed);
+      LIVE.education = buildEducation(parsed);
+      LIVE.availability = buildAvailability(parsed);
+      LIVE.location = buildLocation(parsed);
+      LIVE.cv = buildCV(parsed);
+      LIVE.extracurricular = buildExtracurricular(doc);
+    }).catch(function () {}),
+    fetchDoc('blog.html').then(function (doc) { LIVE.blog = buildBlog(doc); }).catch(function () {})
+  ]).then(function () {}).catch(function () { /* whatever failed just falls back to static */ });
+
   var KB = [
     {
       keys: ['skill','tech','language','tool','know','use','python','sql','power bi','excel','javascript','c++','pandas','numpy'],
+      dynamic: function () { return LIVE.skills; },
       answer: "Saimoon works with:\n\n🔹 Languages: Python, SQL, JavaScript, C++\n🔹 Libraries: Pandas, NumPy\n🔹 Visualization: Power BI, Excel\n🔹 Tools: VS Code, Git, Jupyter Notebook"
     },
     {
       keys: ['project','build','work done','portfolio project','his project','show project'],
+      dynamic: function () { return LIVE.projects; },
       answer: "Saimoon has 3 data analytics projects:\n\n1️⃣ Netflix Movie Data Analysis — 9,000+ movies, Python & Pandas\n\n2️⃣ Quantium Retail Analytics — 260K+ transactions, Store 77 had +29.1% uplift\n\n3️⃣ Zepto E-commerce Inventory Analysis — SQL-based insights\n\nClick Projects in the nav to see them all!"
     },
     {
@@ -27,42 +219,52 @@
     },
     {
       keys: ['certificate','certification','course','forage','sololearn','simplilearn'],
+      dynamic: function () { return LIVE.certs; },
       answer: "Saimoon has 11 certificates 🏆\n\n• Quantium Data Analytics (Forage)\n• EA Product Management (Forage)\n• Python Developer (SoloLearn)\n• SQL Intermediate (SoloLearn)\n• Microsoft Power BI (Skill Course)\n• Microsoft Excel (Skill Course)\n• Data Analytics & Power BI (Interactive Cares)\n• Inventory Management (HP Foundation)\n• Supply Chain Management (Simplilearn)\n• Prompt Engineering (Simplilearn)\n• SQL Micro Course (Skill Course)"
     },
     {
       keys: ['contact','email','reach','message','whatsapp','gmail','how to contact','get in touch'],
+      dynamic: function () { return LIVE.contact; },
       answer: "You can reach Saimoon here 📬\n\n📧 Email: adnansaimoon@gmail.com\n💼 LinkedIn: linkedin.com/in/saimoon-adnan-771079322\n💬 WhatsApp: +8801600627822\n🐙 GitHub: github.com/saimoon-adnan\n\nHe's open to internships, freelance & full-time roles!"
     },
     {
       keys: ['github','linkedin','facebook','twitter','x/twitter','social','link','social media'],
+      dynamic: function () { return LIVE.socials; },
       answer: "Saimoon's social links 🔗\n\n🐙 GitHub: github.com/saimoon-adnan\n💼 LinkedIn: linkedin.com/in/saimoon-adnan-771079322\n📘 Facebook: facebook.com/adnan.irfan.1213\n🐦 X: x.com/OnlySaimon\n📧 Email: adnansaimoon@gmail.com"
     },
     {
       keys: ['who is','about saimoon','about him','tell me about','introduce','who are you','describe him'],
+      dynamic: function () { return LIVE.about; },
       answer: "About Saimoon Ahmed Adnan 👋\n\nComputer Science student and aspiring Product Data Analyst based in Dhaka, Bangladesh.\n\nSpecializes in SQL, Python, Power BI, and Product Analytics — transforming raw data into actionable insights.\n\nCurrently open to internships and full-time opportunities!"
     },
     {
       keys: ['education','study','university','cse','degree','student','background'],
+      dynamic: function () { return LIVE.education; },
       answer: "Saimoon is pursuing a B.Sc. in Computer Science and Engineering (CSE) 🎓\n\nBased in Dhaka, Bangladesh.\n\nAlongside his degree, he's completed 11 certifications and 2 Forage job simulations."
     },
     {
       keys: ['available','hire','open to work','opportunity','job','intern','freelance'],
+      dynamic: function () { return LIVE.availability; },
       answer: "Yes! Saimoon is currently open to work 🟢\n\n• Internships\n• Freelance projects\n• Full-time opportunities\n\nFocus: Data Analytics, Product Analytics, Data Science\n\n📧 adnansaimoon@gmail.com\n💬 +8801600627822"
     },
     {
       keys: ['blog','article','writing','post','read his'],
+      dynamic: function () { return LIVE.blog; },
       answer: "Saimoon wrote a blog article 📝\n\n\"How Data Drives Better Product Decisions\"\n\nCovers product metrics, a food delivery case study, common analytics mistakes, and tools like SQL, Python, Power BI.\n\nCheck the Blog section in the nav!"
     },
     {
       keys: ['extracurricular','extra curricular','simulation','electronic arts','ea product'],
+      dynamic: function () { return LIVE.extracurricular; },
       answer: "Saimoon completed 2 Forage simulations 💼\n\n🎮 EA Product Management (March 2026)\n• KPI framework for a strategy RPG mobile game\n\n📊 Quantium Data Analytics (June 2026)\n• Transaction analytics & benchmark store analysis"
     },
     {
       keys: ['location','where','country','bangladesh','dhaka','based in'],
+      dynamic: function () { return LIVE.location; },
       answer: "Saimoon is based in Dhaka, Bangladesh 🇧🇩\n\nAvailable for remote work globally too!"
     },
     {
       keys: ['cv','resume','download cv'],
+      dynamic: function () { return LIVE.cv; },
       answer: "Saimoon's CV is available on the About page 📄\n\nClick 'About' in the navigation, then click 'Download CV'."
     }
   ];
@@ -93,7 +295,12 @@
       if (score > bestScore) { bestScore = score; best = entry; }
     });
 
-    return bestScore > 0 ? best.answer : FALLBACK;
+    if (bestScore === 0) return FALLBACK;
+    if (best.dynamic) {
+      var live = best.dynamic();
+      if (live) return live;   // fresh data scraped from the live pages
+    }
+    return best.answer;        // static fallback (fetch not ready / failed)
   }
 
   /* ── CSS ── */
@@ -209,10 +416,13 @@
     t.innerHTML = '<span></span><span></span><span></span>';
     box.appendChild(t);
     scroll();
-    setTimeout(function () {
+    var minDelay = new Promise(function (res) {
+      setTimeout(res, 500 + Math.random() * 300);
+    });
+    Promise.all([minDelay, LIVE_READY]).then(function () {
       t.remove();
       add(respond(text), 'ai');
-    }, 500 + Math.random() * 300);
+    });
   }
 
   function add(text, type) {
