@@ -440,60 +440,88 @@
   /* ── CSS ── */
   var css = document.createElement('style');
   css.textContent = `
-#sai-btn{width:56px;height:56px;border-radius:50%;background:var(--text,#111113);color:var(--bg,#fff);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.18);z-index:9999;transition:transform .2s,box-shadow .2s;}
-#sai-btn:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(0,0,0,.22);}
-#sai-btn svg{width:22px;height:22px;}
-#sai-win{position:fixed;bottom:96px;right:28px;width:360px;max-height:520px;background:var(--bg,#fff);border:1px solid var(--border,#e7e7e9);border-radius:20px;box-shadow:0 8px 40px -8px rgba(120,120,128,.32),0 2px 8px rgba(0,0,0,.08);display:none;flex-direction:column;overflow:hidden;z-index:9998;font-family:"Inter",-apple-system,sans-serif;}
+#sai-btn{position:fixed;bottom:28px;right:28px;width:60px;height:60px;border-radius:50%;background:#1c1c1f;color:#fff;border:2px solid rgba(255,255,255,.12);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(0,0,0,.32),0 1px 3px rgba(0,0,0,.2);z-index:9999;transition:transform .2s,box-shadow .2s;padding:0;overflow:visible;}
+#sai-btn:hover{transform:scale(1.07);box-shadow:0 8px 30px rgba(0,0,0,.4);}
+#sai-btn img{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:center 12%;display:block;}
+#sai-btn svg{width:24px;height:24px;}
+.sai-badge{position:absolute;bottom:-2px;right:-2px;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid #1c1c1f;display:flex;align-items:center;justify-content:center;}
+.sai-badge svg{width:10px;height:10px;color:#111;}
+.sai-dot{position:absolute;top:1px;right:1px;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid #1c1c1f;}
+@keyframes saiPulseRing{0%{box-shadow:0 6px 24px rgba(0,0,0,.28),0 0 0 0 rgba(255,255,255,.35);}70%{box-shadow:0 6px 24px rgba(0,0,0,.28),0 0 0 12px rgba(255,255,255,0);}100%{box-shadow:0 6px 24px rgba(0,0,0,.28),0 0 0 0 rgba(255,255,255,0);}}
+#sai-btn.sai-pulse{animation:saiPulseRing 1.8s ease-out 3;}
+.sai-teaser{position:fixed;bottom:100px;right:28px;max-width:220px;background:rgba(28,28,31,.92);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);color:#fff;border:1px solid rgba(255,255,255,.1);border-radius:16px 16px 4px 16px;padding:11px 30px 11px 14px;font-size:13px;line-height:1.45;font-weight:500;font-family:"Inter",-apple-system,sans-serif;box-shadow:0 8px 28px -6px rgba(0,0,0,.5);z-index:9998;opacity:0;transform:translateY(8px) scale(.96);transition:opacity .35s ease,transform .35s ease;pointer-events:none;}
+.sai-teaser.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+.sai-teaser-x{position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.1);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7);padding:0;}
+.sai-teaser-x svg{width:9px;height:9px;}
+#sai-win{position:fixed;bottom:100px;right:28px;width:380px;max-height:min(580px,78vh);background:rgba(24,24,27,.78);-webkit-backdrop-filter:blur(28px) saturate(160%);backdrop-filter:blur(28px) saturate(160%);border:1px solid rgba(255,255,255,.08);border-radius:22px;box-shadow:0 20px 60px -12px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.3);display:none;flex-direction:column;overflow:hidden;z-index:9998;font-family:"Inter",-apple-system,sans-serif;}
 #sai-win.open{display:flex;}
-.s-hd{padding:14px 16px;border-bottom:1px solid var(--border,#e7e7e9);display:flex;align-items:center;gap:10px;background:var(--bg-soft,#f7f7f8);}
-.s-av{width:36px;height:36px;border-radius:10px;overflow:hidden;background:var(--bg-soft-2,#f2f2f3);flex-shrink:0;}
-.s-av img{width:100%;height:100%;object-fit:cover;object-position:center 10%;}
-.s-nm{font-size:13.5px;font-weight:700;color:var(--text,#111);}
-.s-st{font-size:11.5px;color:#16a34a;display:flex;align-items:center;gap:4px;margin-top:1px;}
-.s-st::before{content:"";width:6px;height:6px;border-radius:50%;background:#16a34a;display:inline-block;}
-.s-cl{background:none;border:none;cursor:pointer;color:var(--text-faint,#9a9aa0);padding:4px;border-radius:6px;display:flex;margin-left:auto;transition:color .15s;}
-.s-cl:hover{color:var(--text,#111);}
+.s-hd{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.02);}
+.s-av{width:38px;height:38px;border-radius:50%;overflow:hidden;background:#2c2c30;flex-shrink:0;border:1px solid rgba(255,255,255,.12);}
+.s-av img{width:100%;height:100%;object-fit:cover;object-position:center 12%;}
+.s-nm{font-size:13.5px;font-weight:700;color:#fff;}
+.s-st{font-size:11.5px;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:4px;margin-top:1px;}
+.s-st::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff;display:inline-block;}
+.s-cl{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.5);padding:4px;border-radius:6px;display:flex;margin-left:auto;transition:color .15s;}
+.s-cl:hover{color:#fff;}
 .s-cl svg{width:16px;height:16px;}
-.s-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;}
+.s-msgs{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth;}
 .s-msgs::-webkit-scrollbar{width:4px;}
-.s-msgs::-webkit-scrollbar-thumb{background:var(--border,#e7e7e9);border-radius:4px;}
-.s-m{max-width:90%;font-size:13px;line-height:1.6;}
-.s-ai{align-self:flex-start;background:var(--bg-soft,#f7f7f8);border:1px solid var(--border,#e7e7e9);color:var(--text,#111);padding:10px 13px;border-radius:4px 14px 14px 14px;}
-.s-u{align-self:flex-end;background:var(--text,#111113);color:var(--bg,#fff);padding:10px 13px;border-radius:14px 14px 4px 14px;}
-.s-typing{align-self:flex-start;display:flex;gap:4px;padding:11px 13px;background:var(--bg-soft,#f7f7f8);border:1px solid var(--border,#e7e7e9);border-radius:4px 14px 14px 14px;}
-.s-typing span{width:6px;height:6px;border-radius:50%;background:var(--text-faint,#9a9aa0);animation:sDot 1.2s infinite ease-in-out;}
+.s-msgs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:4px;}
+.s-day{align-self:center;font-size:10.5px;font-weight:600;color:rgba(255,255,255,.4);background:rgba(255,255,255,.06);padding:3px 11px;border-radius:999px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;}
+.s-row{display:flex;flex-direction:column;max-width:86%;}
+.s-row.s-row-u{align-self:flex-end;align-items:flex-end;}
+.s-row.s-row-ai{align-self:flex-start;align-items:flex-start;}
+.s-m{font-size:13.5px;line-height:1.55;}
+.s-ai{background:#2c2c30;color:#f2f2f3;padding:10px 13px;border-radius:4px 16px 16px 16px;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.s-u{background:#f2f2f3;color:#111;padding:10px 13px;border-radius:16px 4px 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.s-ts{font-size:10px;color:rgba(255,255,255,.35);margin-top:3px;padding:0 3px;}
+.s-typing{align-self:flex-start;display:flex;gap:4px;padding:11px 13px;background:#2c2c30;border-radius:4px 16px 16px 16px;}
+.s-typing span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4);animation:sDot 1.2s infinite ease-in-out;}
 .s-typing span:nth-child(2){animation-delay:.2s;}
 .s-typing span:nth-child(3){animation-delay:.4s;}
 @keyframes sDot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
 .s-qs{padding:0 14px 10px;display:flex;flex-wrap:wrap;gap:6px;}
-.s-qs button{font-size:11.5px;font-weight:500;padding:5px 11px;border-radius:999px;border:1px solid var(--border,#e7e7e9);background:var(--bg-soft,#f7f7f8);color:var(--text-soft,#6b6b70);cursor:pointer;transition:background .15s,color .15s;font-family:inherit;}
-.s-qs button:hover{background:var(--text,#111);color:var(--bg,#fff);border-color:var(--text,#111);}
-.s-ir{padding:10px 12px;border-top:1px solid var(--border,#e7e7e9);display:flex;gap:8px;background:var(--bg,#fff);}
-.s-ir input{flex:1;font-family:inherit;font-size:13px;padding:9px 13px;border-radius:999px;border:1px solid var(--border,#e7e7e9);background:var(--bg-soft,#f7f7f8);color:var(--text,#111);outline:none;transition:border-color .15s;}
-.s-ir input:focus{border-color:var(--text-soft,#6b6b70);}
-.s-ir input::placeholder{color:var(--text-faint,#9a9aa0);}
-.s-sd{width:36px;height:36px;border-radius:50%;background:var(--text,#111);color:var(--bg,#fff);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s;}
-.s-sd:hover{opacity:.8;}
-.s-sd svg{width:15px;height:15px;}
-.s-lnk{color:inherit;font-weight:600;text-decoration:underline;text-decoration-color:var(--border,#d8d8db);text-underline-offset:2px;word-break:break-word;transition:text-decoration-color .15s;}
+.s-qs button{font-size:11.5px;font-weight:500;padding:5px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:rgba(255,255,255,.75);cursor:pointer;transition:background .15s,color .15s;font-family:inherit;}
+.s-qs button:hover{background:#fff;color:#111;border-color:#fff;}
+.s-ir{padding:10px 12px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.02);}
+.s-ir input{flex:1;min-width:0;font-family:inherit;font-size:13.5px;padding:9px 6px 9px 14px;border:none;background:transparent;color:#fff;outline:none;}
+.s-ir input::placeholder{color:rgba(255,255,255,.35);}
+.s-sd{padding:0 18px;height:36px;border-radius:999px;background:#fff;color:#111;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;font-weight:700;font-family:inherit;transition:opacity .15s,transform .1s;box-shadow:0 2px 10px rgba(0,0,0,.25);}
+.s-sd:hover{opacity:.9;}
+.s-sd:active{transform:scale(.94);}
+.s-lnk{color:#fff;font-weight:600;text-decoration:underline;text-decoration-color:rgba(255,255,255,.4);text-underline-offset:2px;word-break:break-word;transition:text-decoration-color .15s;}
 .s-lnk:hover{text-decoration-color:currentColor;}
-.s-m strong{font-weight:700;}
-@media(max-width:420px){#sai-win{width:calc(100vw - 32px);right:16px;bottom:84px;}#sai-fab-wrap{right:16px!important;bottom:16px!important;}}
+.s-m strong{font-weight:700;color:#fff;}
+@media(max-width:480px){
+  #sai-win{width:calc(100vw - 20px);right:10px;left:10px;bottom:82px;max-height:min(72vh,620px);border-radius:18px;}
+  #sai-btn{right:16px;bottom:16px;width:56px;height:56px;}
+  .sai-teaser{right:14px;left:14px;max-width:none;bottom:80px;}
+}
+@media(max-height:560px){
+  #sai-win{max-height:88vh;bottom:78px;}
+}
 `;
   document.head.appendChild(css);
+
+  var AVATAR = 'my%20pic/saimon%201.jpeg';
 
   /* ── HTML ── */
   var wrap = document.createElement('div');
   wrap.innerHTML = `
-<div id="sai-fab-wrap" style="position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
-<div id="sai-bubble" style="background:#111113;color:#fff;font-family:'Inter',-apple-system,sans-serif;font-size:13px;font-weight:500;padding:9px 15px;border-radius:18px 18px 4px 18px;box-shadow:0 4px 16px rgba(0,0,0,.18);white-space:nowrap;opacity:0;transform:translateY(8px) scale(0.95);transition:opacity 0.4s ease,transform 0.4s ease;pointer-events:none;cursor:pointer;">💬 Can I help you?</div>
-<button id="sai-btn" aria-label="Chat about Saimoon" title="Ask about Saimoon" style="position:relative;">
-  <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-</button>
+<div class="sai-teaser" id="sai-teaser">
+  Have a question? I can help.
+  <button class="sai-teaser-x" id="sai-teaser-x" aria-label="Dismiss">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+  </button>
 </div>
+<button id="sai-btn" aria-label="Chat about Saimoon" title="Ask about Saimoon">
+  <img src="${AVATAR}" alt="" onerror="this.remove()">
+  <span class="sai-dot"></span>
+  <span class="sai-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z" stroke="currentColor" stroke-width="2"/></svg></span>
+</button>
 <div id="sai-win" role="dialog" aria-label="Saimoon's assistant">
   <div class="s-hd">
-    <div class="s-av" id="sai-av-wrap"></div>
+    <div class="s-av"><img src="${AVATAR}" alt="Saimoon" onerror="this.style.display='none'"></div>
     <div>
       <div class="s-nm">Saimoon's Assistant</div>
       <div class="s-st">Always online</div>
@@ -503,7 +531,8 @@
     </button>
   </div>
   <div class="s-msgs" id="sai-msgs">
-    <div class="s-m s-ai">Hi, I'm Saimoon's assistant. Ask me about his skills, projects, certifications, or how to reach him.</div>
+    <div class="s-day">Today</div>
+    <div class="s-row s-row-ai"><div class="s-m s-ai">Hi, I'm Saimoon's assistant. Ask me about his skills, projects, certifications, or how to reach him.</div><div class="s-ts">${timeNow()}</div></div>
   </div>
   <div class="s-qs" id="sai-qs">
     <button>About him</button>
@@ -514,80 +543,41 @@
   </div>
   <div class="s-ir">
     <input type="text" id="sai-inp" placeholder="Ask anything about Saimoon..." autocomplete="off"/>
-    <button class="s-sd" id="sai-sd" aria-label="Send">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+    <button class="s-sd" id="sai-sd" aria-label="Send">Send</button>
   </div>
 </div>`;
   document.body.appendChild(wrap);
 
-  /* ── Photo: try multiple paths ── */
-  (function () {
-    var avWrap = document.getElementById('sai-av-wrap');
-    if (!avWrap) return;
-    var paths = ['my pic/saimon 1.jpg', 'my pic/saimon 1.jpeg', 'my%20pic/saimon%201.jpg', 'assets/saimon 1.jpg', 'assets/photo.jpg'];
-    var idx = 0;
-    function tryNext() {
-      if (idx >= paths.length) {
-        avWrap.innerHTML = '<div style="width:100%;height:100%;background:linear-gradient(135deg,#111113,#3a3a3d);display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:700;">S</div>';
-        return;
-      }
-      var img = new Image();
-      img.onload = function () {
-        var i = document.createElement('img');
-        i.src = paths[idx];
-        i.alt = 'Saimoon';
-        i.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block;';
-        avWrap.appendChild(i);
-      };
-      img.onerror = function () { idx++; tryNext(); };
-      img.src = paths[idx];
-    }
-    tryNext();
-  })();
+  /* ── Teaser popup: shows ~1.5s after load, auto-hides after 10s ── */
+  var teaser = document.getElementById('sai-teaser');
+  var btn = document.getElementById('sai-btn');
+  var teaserShown = 0, teaserMax = 3, teaserCycle = null, teaserHideT = null;
 
-  /* ── Welcome bubble + dim after 10s ── */
-  (function () {
-    var bubble = document.getElementById('sai-bubble');
-    var fabBtn = document.getElementById('sai-btn');
-    if (!bubble || !fabBtn) return;
+  function hideTeaserOnce() {
+    teaser.classList.remove('show');
+    btn.classList.remove('sai-pulse');
+    if (teaserHideT) clearTimeout(teaserHideT);
+  }
+  function showTeaserOnce() {
+    teaserShown++;
+    teaser.classList.add('show');
+    btn.classList.add('sai-pulse');
+    teaserHideT = setTimeout(hideTeaserOnce, 6000);
+  }
+  // dismiss for good — user closed it or opened the chat
+  function stopTeaser() {
+    hideTeaserOnce();
+    if (teaserCycle) clearInterval(teaserCycle);
+  }
 
-    // Show bubble after 1.5s
-    setTimeout(function () {
-      bubble.style.opacity = '1';
-      bubble.style.transform = 'translateY(0) scale(1)';
-      bubble.style.pointerEvents = 'auto';
-    }, 1500);
-
-    // Dim button + hide bubble after 10s
-    setTimeout(function () {
-      bubble.style.opacity = '0';
-      bubble.style.transform = 'translateY(8px) scale(0.95)';
-      bubble.style.pointerEvents = 'none';
-      fabBtn.style.opacity = '0.38';
-      fabBtn.style.transition = 'opacity 0.8s ease, transform 0.2s ease, box-shadow 0.2s ease';
-    }, 10000);
-
-    // Hover restores full opacity
-    fabBtn.addEventListener('mouseenter', function () { fabBtn.style.opacity = '1'; });
-    fabBtn.addEventListener('mouseleave', function () {
-      // only re-dim if chat window is closed and 10s have passed
-      if (!document.getElementById('sai-win').classList.contains('open')) {
-        fabBtn.style.opacity = '0.38';
-      }
-    });
-
-    // Clicking bubble opens chat
-    bubble.addEventListener('click', function () {
-      document.getElementById('sai-btn').click();
-    });
-
-    // When chat opens, restore opacity and hide bubble
-    document.getElementById('sai-btn').addEventListener('click', function () {
-      bubble.style.display = 'none';
-      fabBtn.style.opacity = '1';
-    });
-  })();
+  setTimeout(function () {
+    showTeaserOnce();
+    teaserCycle = setInterval(function () {
+      if (teaserShown >= teaserMax) { clearInterval(teaserCycle); return; }
+      showTeaserOnce();
+    }, 30000);
+  }, 1500);
+  document.getElementById('sai-teaser-x').addEventListener('click', stopTeaser);
 
   /* ── Logic ── */
   var win  = document.getElementById('sai-win');
@@ -597,6 +587,7 @@
 
   document.getElementById('sai-btn').addEventListener('click', function () {
     win.classList.toggle('open');
+    stopTeaser();
     if (win.classList.contains('open')) inp.focus();
   });
   document.getElementById('sai-cl').addEventListener('click', function () {
@@ -664,11 +655,26 @@
     return html.replace(/\n/g, '<br>');
   }
 
+  function timeNow() {
+    var d = new Date();
+    var h = d.getHours(), m = d.getMinutes();
+    var ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12; if (h === 0) h = 12;
+    return h + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+  }
+
   function add(text, type) {
+    var row = document.createElement('div');
+    row.className = 's-row s-row-' + type;
     var d = document.createElement('div');
     d.className = 's-m s-' + type;
     d.innerHTML = type === 'ai' ? formatAi(text) : escapeHtml(text).replace(/\n/g, '<br>');
-    box.appendChild(d);
+    var ts = document.createElement('div');
+    ts.className = 's-ts';
+    ts.textContent = timeNow();
+    row.appendChild(d);
+    row.appendChild(ts);
+    box.appendChild(row);
     scroll();
   }
   function scroll() { box.scrollTop = box.scrollHeight; }
