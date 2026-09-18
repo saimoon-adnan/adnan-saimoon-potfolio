@@ -440,13 +440,13 @@
   /* ── CSS ── */
   var css = document.createElement('style');
   css.textContent = `
-#sai-btn{position:fixed;bottom:28px;right:28px;width:60px;height:60px;border-radius:50%;background:#1c1c1f;color:#fff;border:2px solid rgba(255,255,255,.12);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(0,0,0,.32),0 1px 3px rgba(0,0,0,.2);z-index:9999;transition:transform .2s,box-shadow .2s;padding:0;overflow:visible;}
+#sai-btn{position:fixed;bottom:28px;right:28px;width:50px;height:50px;border-radius:50%;background:#1c1c1f;color:#fff;border:2px solid rgba(255,255,255,.12);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(0,0,0,.32),0 1px 3px rgba(0,0,0,.2);z-index:9999;transition:transform .2s,box-shadow .2s;padding:0;overflow:visible;}
 #sai-btn:hover{transform:scale(1.07);box-shadow:0 8px 30px rgba(0,0,0,.4);}
 #sai-btn img{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:center 12%;display:block;}
 #sai-btn svg{width:24px;height:24px;}
-.sai-badge{position:absolute;bottom:-2px;right:-2px;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid #1c1c1f;display:flex;align-items:center;justify-content:center;}
-.sai-badge svg{width:10px;height:10px;color:#111;}
-.sai-dot{position:absolute;top:1px;right:1px;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid #1c1c1f;}
+.sai-badge{position:absolute;bottom:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:#22c55e;border:2px solid #1c1c1f;display:flex;align-items:center;justify-content:center;}
+.sai-badge svg{width:9px;height:9px;color:#fff;}
+.sai-dot{position:absolute;top:0;right:0;width:11px;height:11px;border-radius:50%;background:#22c55e;border:2px solid #1c1c1f;}
 @keyframes saiPulseRing{0%{box-shadow:0 6px 24px rgba(0,0,0,.28),0 0 0 0 rgba(255,255,255,.35);}70%{box-shadow:0 6px 24px rgba(0,0,0,.28),0 0 0 12px rgba(255,255,255,0);}100%{box-shadow:0 6px 24px rgba(0,0,0,.28),0 0 0 0 rgba(255,255,255,0);}}
 #sai-btn.sai-pulse{animation:saiPulseRing 1.8s ease-out 3;}
 .sai-teaser{position:fixed;bottom:100px;right:28px;max-width:220px;background:rgba(28,28,31,.92);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);color:#fff;border:1px solid rgba(255,255,255,.1);border-radius:16px 16px 4px 16px;padding:11px 30px 11px 14px;font-size:13px;line-height:1.45;font-weight:500;font-family:"Inter",-apple-system,sans-serif;box-shadow:0 8px 28px -6px rgba(0,0,0,.5);z-index:9998;opacity:0;transform:translateY(8px) scale(.96);transition:opacity .35s ease,transform .35s ease;pointer-events:none;}
@@ -494,7 +494,7 @@
 .s-m strong{font-weight:700;color:#fff;}
 @media(max-width:480px){
   #sai-win{width:calc(100vw - 20px);right:10px;left:10px;bottom:82px;max-height:min(72vh,620px);border-radius:18px;}
-  #sai-btn{right:16px;bottom:16px;width:56px;height:56px;}
+  #sai-btn{right:14px;bottom:14px;width:46px;height:46px;}
   .sai-teaser{right:14px;left:14px;max-width:none;bottom:80px;}
 }
 @media(max-height:560px){
@@ -509,7 +509,7 @@
   var wrap = document.createElement('div');
   wrap.innerHTML = `
 <div class="sai-teaser" id="sai-teaser">
-  Have a question? I can help.
+  Need quick assist?
   <button class="sai-teaser-x" id="sai-teaser-x" aria-label="Dismiss">
     <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
   </button>
@@ -551,7 +551,7 @@
   /* ── Teaser popup: shows ~1.5s after load, auto-hides after 10s ── */
   var teaser = document.getElementById('sai-teaser');
   var btn = document.getElementById('sai-btn');
-  var teaserShown = 0, teaserMax = 3, teaserCycle = null, teaserHideT = null;
+  var teaserShown = 0, teaserMax = 4, teaserCycle = null, teaserHideT = null;
 
   function hideTeaserOnce() {
     teaser.classList.remove('show');
