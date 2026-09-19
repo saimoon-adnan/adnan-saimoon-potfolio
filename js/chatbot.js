@@ -440,12 +440,11 @@
   /* ── CSS ── */
   var css = document.createElement('style');
   css.textContent = `
-#sai-btn{position:fixed;bottom:28px;right:28px;width:50px;height:50px;border-radius:50%;background:#1c1c1f;color:#fff;border:2px solid rgba(255,255,255,.12);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(0,0,0,.32),0 1px 3px rgba(0,0,0,.2);z-index:9999;transition:transform .2s,box-shadow .2s;padding:0;overflow:visible;}
+#sai-btn{position:fixed;bottom:28px;right:28px;width:50px;height:50px;border-radius:50%;background:#1c1c1f;color:#fff;border:2px solid rgba(255,255,255,.12);cursor:grab;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(0,0,0,.32),0 1px 3px rgba(0,0,0,.2);z-index:9999;transition:transform .2s,box-shadow .2s;padding:0;overflow:visible;touch-action:none;user-select:none;}
 #sai-btn:hover{transform:scale(1.07);box-shadow:0 8px 30px rgba(0,0,0,.4);}
+#sai-btn.sai-dragging{cursor:grabbing;transition:none;}
 #sai-btn img{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:center 12%;display:block;}
-#sai-btn svg{width:24px;height:24px;}
-.sai-badge{position:absolute;bottom:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:#22c55e;border:2px solid #1c1c1f;display:flex;align-items:center;justify-content:center;}
-.sai-badge svg{width:9px;height:9px;color:#fff;}
+#sai-btn svg{width:22px;height:22px;}
 .sai-dot{position:absolute;top:0;right:0;width:11px;height:11px;border-radius:50%;background:#22c55e;border:2px solid #1c1c1f;}
 @keyframes saiPulseRing{0%{box-shadow:0 6px 24px rgba(0,0,0,.28),0 0 0 0 rgba(255,255,255,.35);}70%{box-shadow:0 6px 24px rgba(0,0,0,.28),0 0 0 12px rgba(255,255,255,0);}100%{box-shadow:0 6px 24px rgba(0,0,0,.28),0 0 0 0 rgba(255,255,255,0);}}
 #sai-btn.sai-pulse{animation:saiPulseRing 1.8s ease-out 3;}
@@ -493,12 +492,12 @@
 .s-lnk:hover{text-decoration-color:currentColor;}
 .s-m strong{font-weight:700;color:#fff;}
 @media(max-width:480px){
-  #sai-win{width:calc(100vw - 20px);right:10px;left:10px;bottom:82px;max-height:min(72vh,620px);border-radius:18px;}
-  #sai-btn{right:14px;bottom:14px;width:46px;height:46px;}
-  .sai-teaser{right:14px;left:14px;max-width:none;bottom:80px;}
+  #sai-win{width:calc(100vw - 20px);max-height:min(72vh,620px);border-radius:18px;}
+  #sai-btn{right:16px;bottom:16px;width:46px;height:46px;}
+  .sai-teaser{max-width:200px;}
 }
 @media(max-height:560px){
-  #sai-win{max-height:88vh;bottom:78px;}
+  #sai-win{max-height:88vh;}
 }
 `;
   document.head.appendChild(css);
@@ -515,9 +514,8 @@
   </button>
 </div>
 <button id="sai-btn" aria-label="Chat about Saimoon" title="Ask about Saimoon">
-  <img src="${AVATAR}" alt="" onerror="this.remove()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>
   <span class="sai-dot"></span>
-  <span class="sai-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z" stroke="currentColor" stroke-width="2"/></svg></span>
 </button>
 <div id="sai-win" role="dialog" aria-label="Saimoon's assistant">
   <div class="s-hd">
@@ -548,9 +546,102 @@
 </div>`;
   document.body.appendChild(wrap);
 
-  /* ── Teaser popup: shows ~1.5s after load, auto-hides after 10s ── */
   var teaser = document.getElementById('sai-teaser');
   var btn = document.getElementById('sai-btn');
+  var win  = document.getElementById('sai-win');
+
+  /* ── Draggable launcher: reposition anywhere on screen, saved for next visit ── */
+  function btnRect() { return btn.getBoundingClientRect(); }
+  function clampPos(x, y) {
+    var r = btnRect();
+    var maxX = window.innerWidth - r.width - 6;
+    var maxY = window.innerHeight - r.height - 6;
+    return { x: Math.max(6, Math.min(x, maxX)), y: Math.max(6, Math.min(y, maxY)) };
+  }
+  function setBtnPos(x, y) {
+    btn.style.left = x + 'px';
+    btn.style.top = y + 'px';
+    btn.style.right = 'auto';
+    btn.style.bottom = 'auto';
+  }
+  (function restoreBtnPos() {
+    try {
+      var saved = JSON.parse(localStorage.getItem('sai-btn-pos') || 'null');
+      if (saved && typeof saved.x === 'number') {
+        var p = clampPos(saved.x, saved.y);
+        setBtnPos(p.x, p.y);
+      }
+    } catch (e) {}
+  })();
+
+  var dragging = false, dragMoved = false, dragStartX, dragStartY, origX, origY;
+  function dragDown(e) {
+    var p = e.touches ? e.touches[0] : e;
+    dragging = true; dragMoved = false;
+    var r = btnRect();
+    origX = r.left; origY = r.top;
+    dragStartX = p.clientX; dragStartY = p.clientY;
+    btn.classList.add('sai-dragging');
+  }
+  function dragMove(e) {
+    if (!dragging) return;
+    var p = e.touches ? e.touches[0] : e;
+    var dx = p.clientX - dragStartX, dy = p.clientY - dragStartY;
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) dragMoved = true;
+    if (dragMoved) {
+      if (e.cancelable) e.preventDefault();
+      var np = clampPos(origX + dx, origY + dy);
+      setBtnPos(np.x, np.y);
+      if (win.classList.contains('open')) positionPanel(win);
+    }
+  }
+  function dragUp() {
+    if (!dragging) return;
+    dragging = false;
+    btn.classList.remove('sai-dragging');
+    if (dragMoved) {
+      try {
+        var r = btnRect();
+        localStorage.setItem('sai-btn-pos', JSON.stringify({ x: r.left, y: r.top }));
+      } catch (e) {}
+    }
+  }
+  btn.addEventListener('mousedown', dragDown);
+  document.addEventListener('mousemove', dragMove);
+  document.addEventListener('mouseup', dragUp);
+  btn.addEventListener('touchstart', dragDown, { passive: true });
+  document.addEventListener('touchmove', dragMove, { passive: false });
+  document.addEventListener('touchend', dragUp);
+  window.addEventListener('resize', function () {
+    var r = btnRect();
+    var p = clampPos(r.left, r.top);
+    if (btn.style.left) setBtnPos(p.x, p.y);
+  });
+
+  /* ── Anchor a floating panel (teaser / chat window) near the launcher,
+     flipping above/below and left/right so it never runs off-screen.
+     On narrow phones the chat window instead uses its own full-width
+     CSS layout, since anchoring a ~380px panel to a dragged button
+     doesn't make sense on a small screen. ── */
+  function positionPanel(el, gap) {
+    gap = gap || 14;
+    var r = btnRect();
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var openUp = r.top > vh * 0.55;
+    var openLeft = r.left > vw * 0.5;
+    el.style.top = el.style.bottom = el.style.left = el.style.right = '';
+    if (openUp) el.style.bottom = (vh - r.top + gap) + 'px';
+    else el.style.top = (r.bottom + gap) + 'px';
+    if (openLeft) el.style.right = (vw - r.right) + 'px';
+    else el.style.left = r.left + 'px';
+  }
+  function positionTeaser() { positionPanel(teaser, 10); }
+  function positionWindow() {
+    if (window.innerWidth <= 480) return; // mobile keeps its own full-width CSS layout
+    positionPanel(win, 12);
+  }
+
+  /* ── Teaser popup: shows ~1.5s after load, auto-hides after 10s ── */
   var teaserShown = 0, teaserMax = 4, teaserCycle = null, teaserHideT = null;
 
   function hideTeaserOnce() {
@@ -560,6 +651,7 @@
   }
   function showTeaserOnce() {
     teaserShown++;
+    positionTeaser();
     teaser.classList.add('show');
     btn.classList.add('sai-pulse');
     teaserHideT = setTimeout(hideTeaserOnce, 6000);
@@ -580,15 +672,15 @@
   document.getElementById('sai-teaser-x').addEventListener('click', stopTeaser);
 
   /* ── Logic ── */
-  var win  = document.getElementById('sai-win');
   var box  = document.getElementById('sai-msgs');
   var inp  = document.getElementById('sai-inp');
   var qs   = document.getElementById('sai-qs');
 
   document.getElementById('sai-btn').addEventListener('click', function () {
+    if (dragMoved) { dragMoved = false; return; }  // was a drag, not a tap
     win.classList.toggle('open');
+    if (win.classList.contains('open')) { positionWindow(); inp.focus(); }
     stopTeaser();
-    if (win.classList.contains('open')) inp.focus();
   });
   document.getElementById('sai-cl').addEventListener('click', function () {
     win.classList.remove('open');
