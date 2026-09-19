@@ -491,9 +491,9 @@
 .s-lnk:hover{text-decoration-color:currentColor;}
 .s-m strong{font-weight:700;color:#fff;}
 @media(max-width:480px){
-  #sai-win{width:calc(100vw - 20px);max-height:min(72vh,620px);border-radius:18px;}
+  #sai-win{left:10px;right:10px;width:auto;bottom:74px;max-height:min(72vh,620px);border-radius:18px;}
   #sai-btn{right:16px;bottom:16px;width:46px;height:46px;}
-  .sai-teaser{max-width:200px;}
+  .sai-teaser{right:16px;left:auto;max-width:200px;bottom:74px;}
 }
 @media(max-height:560px){
   #sai-win{max-height:88vh;}
