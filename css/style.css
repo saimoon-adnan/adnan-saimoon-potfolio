@@ -800,3 +800,81 @@ textarea:focus-visible {
   z-index: 999;
 }
 .skip-link:focus { left: 16px; top: 16px; }
+
+/* ==========================================================================
+   MOBILE BOTTOM NAV — floating glass tab bar (phones / small tablets)
+   The bar itself is injected by js/main.js (initTabBar), so no HTML changes.
+   ========================================================================== */
+.tabbar { display: none; }
+
+@media (max-width: 860px) {
+  /* the tab bar replaces the hamburger / full-screen menu */
+  .nav__links-mobile { display: none !important; }
+  .mobile-menu { display: none !important; }
+
+  /* keep page content clear of the bar */
+  body { padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px)); }
+
+  .tabbar {
+    display: block;
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    max-width: 520px;
+    margin: 0 auto;
+    z-index: 150;
+    padding: 8px 6px;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.62);
+    background: color-mix(in srgb, var(--bg) 62%, transparent);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(24px) saturate(180%);
+    box-shadow: 0 12px 40px -12px rgba(20, 22, 26, 0.3), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+  [data-theme="dark"] .tabbar {
+    background: rgba(24, 24, 27, 0.6);
+    background: color-mix(in srgb, var(--surface) 62%, transparent);
+    box-shadow: 0 14px 44px -12px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  .tabbar ul { display: flex; }
+  .tabbar li { flex: 1; min-width: 0; }
+
+  .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--text-soft);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tab__ico {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 34px;
+    border-radius: 14px;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .tab__ico svg { width: 21px; height: 21px; }
+  .tab:active .tab__ico { transform: scale(0.9); }
+  .tab.is-active { color: var(--text); font-weight: 700; }
+  .tab.is-active .tab__ico { background: rgba(17, 17, 19, 0.09); }
+  [data-theme="dark"] .tab.is-active .tab__ico { background: rgba(255, 255, 255, 0.14); }
+
+  /* chatbot button + window sit above the tab bar */
+  #sai-btn { right: 16px !important; bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
+  .sai-teaser { bottom: calc(152px + env(safe-area-inset-bottom, 0px)) !important; }
+  #sai-win { bottom: calc(152px + env(safe-area-inset-bottom, 0px)) !important; max-height: calc(100vh - 240px) !important; }
+}
+
+@media (max-width: 380px) {
+  .tab { font-size: 9.5px; }
+  .tab__ico { width: 40px; }
+}

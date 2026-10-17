@@ -82,6 +82,35 @@
     });
   }
 
+
+  /* ---------- Mobile bottom tab bar (injected on every page) ---------- */
+  function initTabBar() {
+    // lets env(safe-area-inset-bottom) work on notched phones
+    var vp = document.querySelector('meta[name="viewport"]');
+    if (vp && vp.content.indexOf("viewport-fit") === -1) vp.content += ", viewport-fit=cover";
+
+    var S = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+    var tabs = [
+      ["index.html", "Home", '<svg ' + S + '><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg>'],
+      ["about.html", "About", '<svg ' + S + '><circle cx="12" cy="8" r="3.8"/><path d="M4.5 20c0-3.9 3.4-6 7.5-6s7.5 2.1 7.5 6"/></svg>'],
+      ["skills.html", "Skills", '<svg ' + S + '><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/></svg>'],
+      ["projects.html", "Projects", '<svg ' + S + '><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8.5 7V5.5A1.5 1.5 0 0 1 10 4h4a1.5 1.5 0 0 1 1.5 1.5V7M3 13h18"/></svg>'],
+      ["certificates.html", "Certs", '<svg ' + S + '><circle cx="12" cy="9" r="5"/><path d="M8.6 13.4 7.5 21 12 18.5l4.5 2.5-1.1-7.6"/></svg>'],
+      ["contact.html", "Contact", '<svg ' + S + '><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="m3.5 7.5 8.5 6 8.5-6"/></svg>']
+    ];
+    var file = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
+    var items = tabs.map(function (t) {
+      var on = t[0] === file;
+      return '<li><a href="' + t[0] + '" class="tab' + (on ? " is-active" : "") + '"' + (on ? ' aria-current="page"' : "") + '>' +
+        '<span class="tab__ico">' + t[2] + '</span><span class="tab__label">' + t[1] + '</span></a></li>';
+    }).join("");
+    var nav = document.createElement("nav");
+    nav.className = "tabbar";
+    nav.setAttribute("aria-label", "Primary (mobile)");
+    nav.innerHTML = "<ul>" + items + "</ul>";
+    document.body.appendChild(nav);
+  }
+
   /* ---------- Scroll reveal ---------- */
   function initReveal() {
     var items = document.querySelectorAll(".reveal");
@@ -241,6 +270,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     initTheme();
     initMobileMenu();
+    initTabBar();
     initReveal();
     initActiveNav();
     initSearch();
