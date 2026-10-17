@@ -111,6 +111,43 @@
     document.body.appendChild(nav);
   }
 
+
+  /* ---------- Hero headline: shows one phrase after another ---------- */
+  function initRotate() {
+    var el = document.querySelector("[data-rotate]");
+    if (!el) return;
+    var words = el.getAttribute("data-rotate").split("|");
+    if (words.length < 2) return;
+    var w = 0;
+
+    // Some PCs have "animations off" in the OS (prefers-reduced-motion).
+    // Then we skip the typing effect but still change the phrase every few seconds.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.classList.add("kw-rot--static");
+      setInterval(function () {
+        w = (w + 1) % words.length;
+        el.textContent = words[w];
+      }, 2800);
+      return;
+    }
+
+    var i = words[0].length, deleting = true;
+    function tick() {
+      var full = words[w];
+      if (!deleting) {
+        i++;
+        el.textContent = full.slice(0, i);
+        if (i === full.length) { deleting = true; return setTimeout(tick, 1900); }
+        return setTimeout(tick, 70);
+      }
+      i--;
+      el.textContent = full.slice(0, i);
+      if (i === 0) { deleting = false; w = (w + 1) % words.length; return setTimeout(tick, 350); }
+      setTimeout(tick, 35);
+    }
+    setTimeout(tick, 1900);   // first phrase stays visible for a moment
+  }
+
   /* ---------- Scroll reveal ---------- */
   function initReveal() {
     var items = document.querySelectorAll(".reveal");
@@ -268,6 +305,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
+    initRotate();
     initTheme();
     initMobileMenu();
     initTabBar();
