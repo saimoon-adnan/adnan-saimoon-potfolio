@@ -384,11 +384,33 @@ textarea:focus-visible {
 }
 
 .dot {
-  width: 7px;
-  height: 7px;
+  position: relative;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--accent-green);
   display: inline-block;
+  animation: dotBlink 1.4s ease-in-out infinite;     /* lamp: bright -> dim -> bright */
+}
+.dot::after {                                         /* expanding glow ring */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--accent-green);
+  animation: dotRing 1.4s ease-out infinite;
+}
+@keyframes dotBlink {
+  0%, 100% { opacity: 1;    box-shadow: 0 0 8px var(--accent-green); }
+  50%      { opacity: 0.25; box-shadow: none; }
+}
+@keyframes dotRing {
+  0%   { transform: scale(1);   opacity: 0.55; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+/* keep the lamp blinking even if the PC has OS animations switched off */
+@media (prefers-reduced-motion: reduce) {
+  .dot, .dot::after { animation-duration: 1.4s !important; animation-iteration-count: infinite !important; }
 }
 
 /* ==========================================================================
@@ -880,26 +902,6 @@ textarea:focus-visible {
   .tab { font-size: 9.5px; }
   .tab__ico { width: 40px; }
 }
-
-
-/* ==========================================================================
-   Hero: rotating headline (typed one phrase after another by js/main.js)
-   ========================================================================== */
-.hero-rot { min-height: 1.7em; }
-.kw-rot::after {
-  content: "";
-  display: inline-block;
-  width: 2px;
-  height: 1em;
-  margin-left: 3px;
-  vertical-align: -2px;
-  background: currentColor;
-  animation: kwBlink 1s steps(1) infinite;
-}
-@keyframes kwBlink { 50% { opacity: 0; } }
-@media (max-width: 600px) { .hero-rot { min-height: 3.4em; } }
-
-.kw-rot--static::after { animation: none; }
 
 
 /* Home page animated background (canvas is created by js/main.js) */
