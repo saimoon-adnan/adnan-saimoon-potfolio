@@ -148,6 +148,105 @@
     setTimeout(tick, 1900);   // first phrase stays visible for a moment
   }
 
+
+  /* ---------- Home + About pages: animated "neural network" background ----------
+     Dark mode  -> soft ash / silver nodes and lines
+     Light mode -> charcoal black nodes and lines
+     Move the mouse over the page and the lines reach toward the cursor. */
+  function initBackground() {
+    // pages that get the animated background (add more file names here)
+    var BG_PAGES = ["", "index.html", "about.html"];
+    var file = (window.location.pathname.split("/").pop() || "").toLowerCase();
+    if (BG_PAGES.indexOf(file) === -1) return;
+    var canvas = document.createElement("canvas");
+    canvas.id = "bg-canvas";
+    canvas.setAttribute("aria-hidden", "true");
+    document.body.insertBefore(canvas, document.body.firstChild);
+    var ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Some PCs have OS animations switched off; keep it, but much calmer.
+    var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var speed = calm ? 0.3 : 1;
+
+    var W = 0, H = 0, dpr = 1, nodes = [];
+    var mouse = { x: -9999, y: -9999, on: false };
+    var LINK = 150, MOUSE_R = 170;
+
+    function size() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      canvas.style.width = W + "px"; canvas.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var count = Math.max(28, Math.min(90, Math.round((W * H) / 15000)));
+      LINK = W < 600 ? 110 : 150;
+      while (nodes.length < count) nodes.push(spawn());
+      nodes.length = count;
+    }
+    function spawn() {
+      var a = Math.random() * Math.PI * 2, v = 0.12 + Math.random() * 0.28;
+      return { x: Math.random() * W, y: Math.random() * H, vx: Math.cos(a) * v, vy: Math.sin(a) * v, r: 1 + Math.random() * 1.8 };
+    }
+    function color() {
+      // [r,g,b, node alpha, line alpha]
+      return document.documentElement.getAttribute("data-theme") === "dark"
+        ? [205, 208, 214, 0.65, 0.22]    // ash
+        : [24, 24, 27, 0.7, 0.26];       // charcoal black
+    }
+
+    var last = 0, running = true;
+    function frame(t) {
+      if (!running) return;
+      var dt = Math.min(48, t - last || 16) / 16; last = t;
+      var c = color(), rgb = c[0] + "," + c[1] + "," + c[2];
+      ctx.clearRect(0, 0, W, H);
+
+      for (var i = 0; i < nodes.length; i++) {
+        var n = nodes[i];
+        n.x += n.vx * dt * speed; n.y += n.vy * dt * speed;
+        if (n.x < -20) n.x = W + 20; else if (n.x > W + 20) n.x = -20;
+        if (n.y < -20) n.y = H + 20; else if (n.y > H + 20) n.y = -20;
+        if (mouse.on && !calm) {                       // gently drift away from the cursor
+          var dx = n.x - mouse.x, dy = n.y - mouse.y, d2 = dx * dx + dy * dy;
+          if (d2 < 120 * 120 && d2 > 1) { var d = Math.sqrt(d2), f = (1 - d / 120) * 0.6; n.x += (dx / d) * f; n.y += (dy / d) * f; }
+        }
+      }
+      ctx.lineWidth = 1;
+      for (var a = 0; a < nodes.length; a++) {
+        var p = nodes[a];
+        for (var b = a + 1; b < nodes.length; b++) {
+          var q = nodes[b], ddx = p.x - q.x, ddy = p.y - q.y, dist2 = ddx * ddx + ddy * ddy;
+          if (dist2 < LINK * LINK) {
+            var al = (1 - Math.sqrt(dist2) / LINK) * c[4];
+            ctx.strokeStyle = "rgba(" + rgb + "," + al.toFixed(3) + ")";
+            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
+          }
+        }
+        if (mouse.on && !calm) {                       // lines from the cursor to nearby nodes
+          var mx = p.x - mouse.x, my = p.y - mouse.y, md = Math.sqrt(mx * mx + my * my);
+          if (md < MOUSE_R) {
+            ctx.strokeStyle = "rgba(" + rgb + "," + ((1 - md / MOUSE_R) * c[4] * 2.2).toFixed(3) + ")";
+            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+          }
+        }
+        ctx.fillStyle = "rgba(" + rgb + "," + c[3] + ")";
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+      }
+      requestAnimationFrame(frame);
+    }
+
+    size();
+    window.addEventListener("resize", size);
+    window.addEventListener("mousemove", function (e) { mouse.x = e.clientX; mouse.y = e.clientY; mouse.on = true; }, { passive: true });
+    document.addEventListener("mouseleave", function () { mouse.on = false; });
+    document.addEventListener("visibilitychange", function () {
+      running = !document.hidden;
+      if (running) { last = 0; requestAnimationFrame(frame); }
+    });
+    requestAnimationFrame(frame);
+  }
+
   /* ---------- Scroll reveal ---------- */
   function initReveal() {
     var items = document.querySelectorAll(".reveal");
@@ -307,6 +406,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     initRotate();
     initTheme();
+    initBackground();
     initMobileMenu();
     initTabBar();
     initReveal();
