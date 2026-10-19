@@ -913,3 +913,23 @@ textarea:focus-visible {
   z-index: -1;
   pointer-events: none;
 }
+
+/* ==========================================================================
+   Even space above the footer on every page
+   (the footer's own top margin is removed; the last block of each page
+    gets one consistent bottom space instead)
+   ========================================================================== */
+.footer { margin-top: 0 !important; }
+main > :last-child { padding-bottom: 72px !important; }
+@media (max-width: 860px) {
+  main > :last-child { padding-bottom: 48px !important; }
+}
+
+
+/* No white flash between pages in dark mode: the page background is the theme
+   colour from the very first paint, and the browser UI follows the theme. */
+html { background: var(--bg); }
+/* body must stay transparent, otherwise it would paint over the animated background canvas */
+body { background: transparent !important; }
+html[data-theme="dark"] { color-scheme: dark; }
+html[data-theme="light"] { color-scheme: light; }

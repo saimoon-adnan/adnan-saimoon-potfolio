@@ -117,10 +117,12 @@
      Light mode -> charcoal black nodes and lines
      Move the mouse over the page and the lines reach toward the cursor. */
   function initBackground() {
-    // pages that get the animated background (add more file names here)
-    var BG_PAGES = ["", "index.html", "about.html"];
+    // Home page = full effect. Every other page = softer, lighter and slower,
+    // so it never gets in the way of reading.
     var file = (window.location.pathname.split("/").pop() || "").toLowerCase();
-    if (BG_PAGES.indexOf(file) === -1) return;
+    var isHome = file === "" || file === "index.html";
+    var soft = !isHome;
+    var FADE = soft ? 0.5 : 1;          // line / dot strength
     var canvas = document.createElement("canvas");
     canvas.id = "bg-canvas";
     canvas.setAttribute("aria-hidden", "true");
@@ -130,7 +132,7 @@
 
     // Some PCs have OS animations switched off; keep it, but much calmer.
     var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var speed = calm ? 0.3 : 1;
+    var speed = (calm ? 0.3 : 1) * (soft ? 0.45 : 1.4);   // home: a little livelier (was 1)
 
     var W = 0, H = 0, dpr = 1, nodes = [];
     var mouse = { x: -9999, y: -9999, on: false };
@@ -142,7 +144,8 @@
       canvas.width = W * dpr; canvas.height = H * dpr;
       canvas.style.width = W + "px"; canvas.style.height = H + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      var count = Math.max(28, Math.min(90, Math.round((W * H) / 15000)));
+      var count = Math.max(24, Math.min(90, Math.round((W * H) / 15000)));
+      if (soft) count = Math.round(count * 0.6);
       LINK = W < 600 ? 110 : 150;
       while (nodes.length < count) nodes.push(spawn());
       nodes.length = count;
@@ -163,6 +166,7 @@
       if (!running) return;
       var dt = Math.min(48, t - last || 16) / 16; last = t;
       var c = color(), rgb = c[0] + "," + c[1] + "," + c[2];
+      c = [c[0], c[1], c[2], c[3] * FADE, c[4] * FADE];
       ctx.clearRect(0, 0, W, H);
 
       for (var i = 0; i < nodes.length; i++) {
