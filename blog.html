@@ -80,8 +80,43 @@ Discoveries.</h1>
   <section class="container--wide" style="padding-bottom:100px;">
     <div style="display:grid; grid-template-columns: 1.6fr 1fr; gap:20px; align-items:start;">
 
-      <!-- Featured / large card -->
-      <article class="card reveal" style="padding:32px; cursor:pointer;" onclick="window.location='blog-post-1.html'">
+<!-- NEW: Domain knowledge post (big card) -->
+      <article class="card reveal" style="padding:32px; cursor:pointer;" onclick="window.location='blog-post-2.html'">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+          <span class="pill pill--dark" style="font-size:12px;">Data Analytics</span>
+          <span class="pill" style="font-size:12px;">New</span>
+          <span style="margin-left:auto; font-size:12.5px; color:var(--text-faint); display:flex; align-items:center; gap:5px;">
+            <svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px;"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            3 min read
+          </span>
+        </div>
+
+        <h2 style="font-size:22px; font-weight:800; line-height:1.25; margin-bottom:14px; letter-spacing:-0.01em;">
+          Domain Knowledge in Data Analytics
+        </h2>
+
+        <p style="font-size:14px; color:var(--text-soft); line-height:1.65; margin-bottom:20px;">
+          You can have the best technical skills and still miss the most important insight in your data. Why? Because data alone doesn’t tell the whole story. Domain knowledge connects data analysis with real business understanding.
+        </p>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px;">
+          <span class="pill" style="font-family:var(--font-mono); font-size:11.5px;">◇ Domain Knowledge</span>
+          <span class="pill" style="font-family:var(--font-mono); font-size:11.5px;">◇ Business KPIs</span>
+          <span class="pill" style="font-family:var(--font-mono); font-size:11.5px;">◇ Critical Thinking</span>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <span style="font-size:12.5px; color:var(--text-faint);">October 19, 2026</span>
+          <a href="blog-post-2.html" class="btn btn--ghost" style="font-size:13px; padding:0; gap:5px;" onclick="event.stopPropagation()">
+            Read more
+            <svg viewBox="0 0 24 24" fill="none" style="width:14px;height:14px;"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Right column: earlier post + coming soon -->
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <article class="card reveal" style="padding:26px; cursor:pointer;" onclick="window.location='blog-post-1.html'">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
           <span class="pill pill--dark" style="font-size:12px;">Product Analytics</span>
           <span class="pill" style="font-size:12px;">Featured</span>
@@ -91,13 +126,12 @@ Discoveries.</h1>
           </span>
         </div>
 
-        <h2 style="font-size:22px; font-weight:800; line-height:1.25; margin-bottom:14px; letter-spacing:-0.01em;">
+        <h2 style="font-size:19px; font-weight:800; line-height:1.25; margin-bottom:12px; letter-spacing:-0.01em;">
           How Data Drives Better Product Decisions
         </h2>
 
         <p style="font-size:14px; color:var(--text-soft); line-height:1.65; margin-bottom:20px;">
-          Great products are rarely built on assumptions. They are built on evidence, curiosity, and a willingness to understand users through data. I used to think product analytics was mostly about SQL queries and dashboards — the more I studied, the more I realized data is not just for measurement. Data is for judgment.
-        </p>
+          Great products are rarely built on assumptions. They are built on evidence, curiosity, and a willingness to understand users through data.</p>
 
         <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px;">
           <span class="pill" style="font-family:var(--font-mono); font-size:11.5px;">◇ SQL</span>
@@ -114,23 +148,7 @@ Discoveries.</h1>
           </a>
         </div>
       </article>
-
-      <!-- Small "coming soon" card (right side) -->
-      <article class="card reveal" style="padding:26px; border-style:dashed;">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
-          <span class="pill" style="font-size:12px;">Coming soon</span>
-          <span style="margin-left:auto; font-size:12.5px; color:var(--text-faint); display:flex; align-items:center; gap:5px;">
-            <svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px;"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            — min read
-          </span>
-        </div>
-        <h3 style="font-size:17px; font-weight:700; line-height:1.3; margin-bottom:10px; color:var(--text-faint);">
-          Your next article goes here
-        </h3>
-        <p style="font-size:13.5px; color:var(--text-faint); line-height:1.6;">
-          Keep writing — this spot is waiting.
-        </p>
-      </article>
+      </div>
 
     </div>
   </section>

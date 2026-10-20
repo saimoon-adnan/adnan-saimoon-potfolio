@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Domain Knowledge in Data Analytics — Saimoon Ahmed Adnan</title>
+<meta name="description" content="You can have the best technical skills and still miss the most important insight in your data. Domain knowledge connects data analysis with real business understanding." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+  /* apply the saved theme BEFORE the page is painted (stops the white flash in dark mode) */
+  (function () {
+    try {
+      var t = localStorage.getItem("__portfolio_theme__");
+      if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+</script>
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  .post-body {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 100px;
+  }
+  .post-body h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 48px 0 14px;
+    color: var(--text);
+  }
+  .post-body h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 32px 0 10px;
+    color: var(--text);
+  }
+  .post-body p {
+    font-size: 16px;
+    color: var(--text-soft);
+    line-height: 1.8;
+    margin-bottom: 18px;
+  }
+  .post-body ul {
+    list-style: disc;
+    padding-left: 22px;
+    margin-bottom: 18px;
+  }
+  .post-body ul li {
+    font-size: 16px;
+    color: var(--text-soft);
+    line-height: 1.75;
+    margin-bottom: 6px;
+  }
+  .post-body strong { color: var(--text); font-weight: 600; }
+  .post-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 40px 0;
+  }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-soft);
+    margin-bottom: 40px;
+    transition: color 0.15s ease, gap 0.15s ease;
+  }
+  .back-link:hover { color: var(--text); gap: 10px; }
+  .back-link svg { width: 15px; height: 15px; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="nav-wrap">
+  <nav class="nav" aria-label="Primary">
+    <a href="blog.html" class="nav__brand">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5C4 4.67 4.67 4 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke="currentColor" stroke-width="1.6"/><path d="M20 5.5c0-.83-.67-1.5-1.5-1.5H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Blogs</span>
+    </a>
+    <ul class="nav__links" role="list">
+      <li><a href="index.html" class="nav__link">Home</a></li>
+      <li><a href="about.html" class="nav__link">About</a></li>
+      <li><a href="skills.html" class="nav__link">Skills</a></li>
+      <li><a href="projects.html" class="nav__link">Projects</a></li>
+      <li><a href="certificates.html" class="nav__link">Certificates</a></li>
+      <li><a href="contact.html" class="nav__link">Contact</a></li>
+    </ul>
+    <div class="nav__actions">
+      <button class="nav__icon-btn" aria-label="Search" type="button">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+      <button class="nav__icon-btn" aria-label="Toggle dark mode" type="button" data-theme-toggle>
+        <svg viewBox="0 0 24 24" fill="none" data-theme-icon></svg>
+      </button>
+      <a class="nav__icon-btn" href="https://github.com/saimoon-adnan" aria-label="GitHub" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.49 2.87 8.3 6.84 9.64.5.1.68-.22.68-.49 0-.24-.01-1.05-.01-1.9-2.78.62-3.37-1.21-3.37-1.21-.45-1.18-1.1-1.49-1.1-1.49-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.34-1.11.62-1.36-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.31.1-2.73 0 0 .84-.27 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.42.2 2.47.1 2.73.64.72 1.03 1.64 1.03 2.76 0 3.94-2.34 4.81-4.57 5.06.36.32.67.94.67 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.03 10.03 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z" fill="currentColor"/></svg>
+      </a>
+      <button class="nav__icon-btn nav__links-mobile" aria-label="Open menu" type="button" data-menu-open>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<div class="mobile-menu" data-mobile-menu>
+  <div class="mobile-menu__top">
+    <button class="nav__icon-btn" aria-label="Close menu" type="button" data-menu-close>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <nav class="mobile-menu__links" aria-label="Mobile">
+    <a href="blog.html">Blog</a>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="skills.html">Skills</a>
+    <a href="projects.html">Projects</a>
+    <a href="certificates.html">Certificates</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</div>
+
+<main id="main">
+  <div class="post-body">
+
+    <a href="blog.html" class="back-link reveal">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Writing
+    </a>
+
+    <!-- Article header -->
+    <header style="margin-bottom:40px;">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px;">
+        <span class="pill pill--dark" style="font-size:12px;">Data Analytics</span>
+        <span class="pill" style="font-size:12px;">New</span>
+        <span style="display:flex; align-items:center; gap:5px; font-size:12.5px; color:var(--text-faint);">
+          <svg viewBox="0 0 24 24" fill="none" style="width:13px;height:13px;"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          3 min read
+        </span>
+      </div>
+
+      <h1 style="font-size:clamp(28px,5vw,40px); font-weight:800; line-height:1.18; letter-spacing:-0.02em; margin-bottom:16px;">
+        Domain Knowledge in Data Analytics
+      </h1>
+
+      <p style="font-size:15.5px; color:var(--text-soft); line-height:1.7; margin-bottom:22px;">
+        You can have the best technical skills and still miss the most important insight in your data. Why? Because data alone doesn’t tell the whole story.
+      </p>
+
+      <div style="display:flex; align-items:center; gap:14px; padding:18px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+        <!-- <div style="width:38px; height:38px; border-radius:10px; overflow:hidden; background:var(--bg-soft-2); flex-shrink:0;">
+          <img src="my pic/saimon 1.jpg" alt="Saimoon Ahmed Adnan" style="width:100%; height:100%; object-fit:cover; object-position:center 10%;">
+        </div> -->
+        <div>
+          <p style="font-size:13.5px; font-weight:600; margin-bottom:1px;">Saimoon Ahmed Adnan</p>
+          <p style="font-size:12.5px; color:var(--text-faint);">October 19, 2026</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Article body -->
+    <div class="post-body-content">
+
+      <figure style="margin:0 0 40px;">
+        <img src="Bloog%20posts/Domain%20knowledge%20in%20data%20analytics.png" alt="Domain knowledge in data analytics" style="display:block; width:100%; height:auto; border-radius:18px; border:1px solid var(--border);">
+      </figure>
+
+      <p>You can have the best technical skills and still miss the most important insight in your data. Why? Because data alone doesn’t tell the whole story.</p>
+      <p><strong>Domain knowledge connects data analysis with real business understanding.</strong></p>
+      <p>A data analyst’s job goes beyond writing SQL queries, building dashboards, or creating visualizations. It’s about understanding business problems, asking the right questions, and turning data into meaningful insights.</p>
+
+      <div class="post-divider"></div>
+
+      <h2>A Real Business Example</h2>
+      <p>Let’s take a real business example.</p>
+      <p>Imagine an e-commerce company notices that its sales have increased by 25% this month. At first glance, it looks like a successful month.</p>
+      <p>But after looking deeper, the analyst discovers that the increase came mainly from heavy discounts. Meanwhile, marketing costs and product returns have also increased, reducing overall profit.</p>
+      <p>Without understanding profit margins, customer behavior, and marketing costs, an analyst might report growth without recognizing the underlying problem.</p>
+
+      <div class="post-divider"></div>
+
+      <h2>Where Domain Knowledge Makes a Difference</h2>
+      <p>This is where domain knowledge makes a difference. It helps analysts understand not just what happened, but also why it happened and what the business should do next.</p>
+      <p>Domain knowledge helps analysts:</p>
+      <ul>
+        <li>Define meaningful business KPIs.</li>
+        <li>Identify trends and investigate root causes.</li>
+        <li>Ask better questions before analyzing data.</li>
+        <li>Communicate insights effectively with stakeholders.</li>
+        <li>Recommend actions that support business goals.</li>
+      </ul>
+      <p>Whether in finance, e-commerce, healthcare, or product analytics, understanding the industry is just as important as knowing the tools.</p>
+
+      <div class="post-divider"></div>
+
+      <h2>Final Thoughts</h2>
+      <p><strong>Tools help us analyze data. Domain knowledge helps us interpret it. Critical thinking helps us turn insights into action.</strong></p>
+      <p>I believe becoming a good data analyst requires more than technical expertise. It requires curiosity, business understanding, and the ability to connect numbers with real-world problems.</p>
+
+      <div class="post-divider"></div>
+
+      <a href="blog.html" class="back-link" style="display:inline-flex;">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to Writing
+      </a>
+
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer__top">
+    <div>
+      <p class="footer__brand-name">Saimoon.</p>
+      <p class="footer__brand-text">Exploring the intersection of data, technology, and intelligent solutions to solve meaningful real-world problems.</p>
+      <div class="footer__socials">
+        <a href="https://github.com/saimoon-adnan" class="footer__social-btn" aria-label="GitHub" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.49 2.87 8.3 6.84 9.64.5.1.68-.22.68-.49 0-.24-.01-1.05-.01-1.9-2.78.62-3.37-1.21-3.37-1.21-.45-1.18-1.1-1.49-1.1-1.49-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.34-1.11.62-1.36-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.31.1-2.73 0 0 .84-.27 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.42.2 2.47.1 2.73.64.72 1.03 1.64 1.03 2.76 0 3.94-2.34 4.81-4.57 5.06.36.32.67.94.67 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.03 10.03 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/saimoon-adnan-771079322/" class="footer__social-btn" aria-label="LinkedIn" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6.94 8.5a1.94 1.94 0 1 0 0-3.88 1.94 1.94 0 0 0 0 3.88ZM5.5 10.4h2.9V19H5.5v-8.6Zm5.2 0h2.78v1.18h.04c.39-.73 1.34-1.5 2.76-1.5 2.95 0 3.5 1.94 3.5 4.46V19h-2.9v-3.86c0-.92-.02-2.11-1.29-2.11-1.3 0-1.5 1-1.5 2.05V19h-2.9v-8.6Z" fill="currentColor"/></svg>
+        </a>
+        <a href="mailto:adnansaimoon@gmail.com" class="footer__social-btn" aria-label="Email">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 6.5A1.5 1.5 0 0 1 5.5 5h13A1.5 1.5 0 0 1 20 6.5v11A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5v-11Z" stroke="currentColor" stroke-width="1.5"/><path d="M5 7l7 5.5L19 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+    <nav>
+      <p class="footer__col-title">Pages</p>
+      <a href="about.html">About</a>
+      <a href="skills.html">Skills</a>
+      <a href="projects.html">Projects</a>
+      <a href="certificates.html">Certificates</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div>
+      <p class="footer__col-title">Contact</p>
+      <a href="mailto:adnansaimoon@gmail.com" class="footer__contact-item">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 6.5A1.5 1.5 0 0 1 5.5 5h13A1.5 1.5 0 0 1 20 6.5v11A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5v-11Z" stroke="currentColor" stroke-width="1.5"/><path d="M5 7l7 5.5L19 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        adnansaimoon@gmail.com
+      </a>
+      <a href="https://www.facebook.com/adnan.irfan.1213" class="footer__contact-item" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M14 9h2.5l-.4 3H14v8h-3v-8H9V9h2V7.2C11 4.9 12 3 15 3h2v3h-1.5c-.9 0-1.5.3-1.5 1.3V9Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" fill="none"/></svg>
+        Facebook
+      </a>
+      <a href="https://x.com/OnlySaimon" class="footer__contact-item" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4 4 20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        X
+      </a>
+      <a href="https://wa.me/8801600627822" class="footer__contact-item" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a1 1 0 0 1-1.1 1A18 18 0 0 1 3 4.1 1 1 0 0 1 4 3h4l1.5 4-2 1.3a13 13 0 0 0 6.2 6.2L15 12.5 19 14v1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span>© 2026 Saimoon Ahmed Adnan. All rights reserved.</span>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/chatbot.js"></script>
+</body>
+</html>
